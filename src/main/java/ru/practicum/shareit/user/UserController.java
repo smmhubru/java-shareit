@@ -1,12 +1,58 @@
 package ru.practicum.shareit.user;
 
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.Errors;
+import org.springframework.web.bind.annotation.*;
+import ru.practicum.shareit.validator.ValidationErrorBuilder;
 
-/**
- * // TODO .
- */
+import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
+
 @RestController
+@Slf4j
 @RequestMapping(path = "/users")
 public class UserController {
+    private final UserService userService;
+
+    @Autowired
+    public UserController(UserService userService) {
+        this.userService = userService;
+    }
+
+    @GetMapping("")
+    public ResponseEntity<?> getAllUsers() {
+        return ResponseEntity.ok(userService.getAllUsers());
+
+    }
+
+    @PostMapping("")
+    public ResponseEntity<?> createUser(HttpServletRequest request, @Valid @RequestBody User user, Errors errors) {
+        if (errors.hasErrors()) {
+            log.info("Validation error with request: " + request.getRequestURI());
+            return ResponseEntity.badRequest().body(ValidationErrorBuilder.fromBindingErrors(errors));
+        }
+        return ResponseEntity.ok(userService.addUser(user));
+    }
+
+    @PatchMapping("/{userId}")
+    public ResponseEntity<?> updateUser(
+            HttpServletRequest request, @RequestBody User user, @PathVariable int userId, Errors errors) {
+        if (errors.hasErrors()) {
+            log.info("Validation error with request: " + request.getRequestURI());
+            return ResponseEntity.badRequest().body(ValidationErrorBuilder.fromBindingErrors(errors));
+        }
+        return ResponseEntity.ok(userService.updateUser(userId, user));
+    }
+
+    @GetMapping("/{userId}")
+    public ResponseEntity<?> getUserById(@PathVariable int userId) {
+        return ResponseEntity.ok(userService.getUser(userId));
+    }
+
+    @DeleteMapping("/{userId}")
+    public ResponseEntity<?> deleteUserById(@PathVariable int userId) {
+        return ResponseEntity.ok(userService.removeUser(userId));
+    }
 }
