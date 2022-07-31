@@ -4,7 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
-import ru.practicum.shareit.user.User;
+
+import java.util.List;
 
 @Service
 public class ItemService {
@@ -25,5 +26,19 @@ public class ItemService {
         return storage.getItem(itemId).orElseThrow(
                 () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Unable to find item")
         );
+    }
+
+    public List<Item> getAllItems(int userId) {
+        return storage.getAllItems(userId);
+    }
+
+    public Item updateItem(int itemId, Item item) {
+        return storage.updateItem(itemId, item).orElseThrow(
+                () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Unable to find item")
+        );
+    }
+
+    public List<Item> searchItem(String text) {
+        return storage.searchItem(text);
     }
 }
