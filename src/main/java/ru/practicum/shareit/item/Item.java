@@ -1,20 +1,23 @@
 package ru.practicum.shareit.item;
 
 import lombok.Data;
-import lombok.NonNull;
 import ru.practicum.shareit.requests.ItemRequest;
 import ru.practicum.shareit.user.User;
+
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 @Data
 public class Item {
     private int id;
-    @NonNull
+    @NotBlank(message = "Name can't be blank")
+    @NotNull(message = "Name can't be null")
     private String name;
-    @NonNull
+    @NotBlank(message = "Description can't be null")
+    @NotNull(message = "Description can't be null")
     private String description;
-    @NonNull
+    @NotNull(message = "Available can't be null")
     private Boolean available;
-    @NonNull
     private User owner;
     private ItemRequest request;
 

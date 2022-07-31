@@ -1,5 +1,6 @@
 package ru.practicum.shareit.user;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -10,6 +11,7 @@ import java.util.List;
 public class UserService {
     private final UserStorage storage;
 
+    @Autowired
     public UserService(UserStorage storage) {
         this.storage = storage;
     }
@@ -41,6 +43,4 @@ public class UserService {
     public List<User> getAllUsers() {
         return storage.getAllUsers();
     }
-
-
 }

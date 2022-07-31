@@ -33,6 +33,7 @@ public class InMemoryUserStorage implements UserStorage {
                 () -> new ResponseStatusException(NOT_FOUND, "Unable to find user")
         );
         if (!isEmailUnique(user)) {
+            System.out.println("EMAIL IS NOT UNIQUE");
             return Optional.empty();
         }
         if (isEmailUnique(user) && user.getEmail() != null) {
@@ -42,6 +43,7 @@ public class InMemoryUserStorage implements UserStorage {
             searchResult.setName(user.getName());
         }
         storage.put(userId, searchResult);
+        System.out.println("STORAGE PUT");
         return Optional.of(searchResult);
     }
 

@@ -4,15 +4,18 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.Errors;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.validator.ValidationErrorBuilder;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import javax.validation.constraints.Positive;
 
 @RestController
 @Slf4j
 @RequestMapping(path = "/users")
+@Validated
 public class UserController {
     private final UserService userService;
 
@@ -24,7 +27,6 @@ public class UserController {
     @GetMapping("")
     public ResponseEntity<?> getAllUsers() {
         return ResponseEntity.ok(userService.getAllUsers());
-
     }
 
     @PostMapping("")
@@ -38,7 +40,7 @@ public class UserController {
 
     @PatchMapping("/{userId}")
     public ResponseEntity<?> updateUser(
-            HttpServletRequest request, @RequestBody User user, @PathVariable int userId, Errors errors) {
+            HttpServletRequest request, @Valid @RequestBody User user, @PathVariable @Positive int userId, Errors errors) {
         if (errors.hasErrors()) {
             log.info("Validation error with request: " + request.getRequestURI());
             return ResponseEntity.badRequest().body(ValidationErrorBuilder.fromBindingErrors(errors));
@@ -47,7 +49,7 @@ public class UserController {
     }
 
     @GetMapping("/{userId}")
-    public ResponseEntity<?> getUserById(@PathVariable int userId) {
+    public ResponseEntity<?> getUserById(@PathVariable @Positive int userId) {
         return ResponseEntity.ok(userService.getUser(userId));
     }
 

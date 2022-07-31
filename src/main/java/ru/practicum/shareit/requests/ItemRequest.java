@@ -1,18 +1,18 @@
 package ru.practicum.shareit.requests;
 
 import lombok.Data;
-import lombok.NonNull;
 import ru.practicum.shareit.user.User;
 
+import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
 @Data
 public class ItemRequest {
     private int id;
-    @NonNull
+    @NotNull
     private String description;
-    @NonNull
+    @NotNull
     private User requester;
-    @NonNull
+    @NotNull
     private LocalDateTime created;
 }
