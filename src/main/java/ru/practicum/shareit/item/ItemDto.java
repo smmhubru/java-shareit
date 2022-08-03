@@ -2,6 +2,7 @@ package ru.practicum.shareit.item;
 
 import lombok.Data;
 import lombok.NonNull;
+import ru.practicum.shareit.requests.ItemRequest;
 import ru.practicum.shareit.user.User;
 
 @Data
@@ -17,5 +18,5 @@ public class ItemDto {
     @NonNull
     private User owner;
     @NonNull
-    private int requestId;
+    private ItemRequest request;
 }

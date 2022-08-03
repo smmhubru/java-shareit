@@ -22,14 +22,12 @@ public class Item {
     private User owner;
     private ItemRequest request;
 
-    public static ItemDto toItemDto(Item item) {
-        return new ItemDto(
-                item.getId(),
-                item.getName(),
-                item.getDescription(),
-                item.getAvailable(),
-                item.getOwner(),
-                item.getRequest() != null ? item.getRequest().getId() : null
-        );
+    public Item(int id, String name, String description, Boolean available, User owner, ItemRequest request) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.available = available;
+        this.owner = owner;
+        this.request = request;
     }
 }

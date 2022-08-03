@@ -1,6 +1,7 @@
 package ru.practicum.shareit.user;
 
 import lombok.Data;
+import lombok.NonNull;
 import ru.practicum.shareit.validator.OnCreate;
 
 import javax.validation.constraints.Email;
@@ -18,11 +19,9 @@ public class User {
     @NotNull(message = "Email can't be null", groups = OnCreate.class)
     private String email;
 
-    public static UserDto toUserDto(User user) {
-        return new UserDto(
-                user.getId(),
-                user.getName(),
-                user.getEmail()
-        );
+    public User(int id, String name, String email) {
+        this.id = id;
+        this.name = name;
+        this.email = email;
     }
 }
