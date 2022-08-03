@@ -38,7 +38,7 @@ public class ItemService {
         );
     }
 
-    public List<Item> searchItem(String text) {
+    public List<Item> searchItemByText(String text) {
         return storage.searchItem(text);
     }
 }

@@ -62,7 +62,7 @@ public class ItemController {
     @GetMapping("/search")
     public ResponseEntity<?> searchItem(
             @RequestHeader(value = "X-Sharer-User-Id") int userId, @PathParam("text") String text) {
-        return ResponseEntity.ok(itemService.searchItem(text));
+        return ResponseEntity.ok(itemService.searchItemByText(text));
     }
 
     @PatchMapping("/{itemId}")
