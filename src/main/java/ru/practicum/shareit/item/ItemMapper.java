@@ -10,6 +10,7 @@ public class ItemMapper {
                 item.getOwner(),
                 item.getRequest());
     }
+
     Item toItem(ItemDto itemDto) {
         return new Item(itemDto.getId(),
                 itemDto.getName(),

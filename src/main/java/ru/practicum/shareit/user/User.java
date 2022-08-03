@@ -1,7 +1,6 @@
 package ru.practicum.shareit.user;
 
 import lombok.Data;
-import lombok.NonNull;
 import ru.practicum.shareit.validator.OnCreate;
 
 import javax.validation.constraints.Email;
