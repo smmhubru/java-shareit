@@ -42,7 +42,7 @@ public class UserController {
 
     @PatchMapping("/{userId}")
     public ResponseEntity<?> updateUser(
-            HttpServletRequest request, @Valid @RequestBody User user, @PathVariable @Positive int userId, Errors errors) {
+            HttpServletRequest request, @Valid @RequestBody User user, @PathVariable @Positive Long userId, Errors errors) {
         if (errors.hasErrors()) {
             log.info("Validation error with request: " + request.getRequestURI());
             return ResponseEntity.badRequest().body(ValidationErrorBuilder.fromBindingErrors(errors));
@@ -51,12 +51,12 @@ public class UserController {
     }
 
     @GetMapping("/{userId}")
-    public ResponseEntity<?> getUserById(@PathVariable @Positive int userId) {
+    public ResponseEntity<?> getUserById(@PathVariable @Positive Long userId) {
         return ResponseEntity.ok(userService.getUser(userId));
     }
 
     @DeleteMapping("/{userId}")
-    public ResponseEntity<?> deleteUserById(@PathVariable @Positive int userId) {
+    public ResponseEntity<?> deleteUserById(@PathVariable @Positive Long userId) {
         return ResponseEntity.ok(userService.removeUser(userId));
     }
 }

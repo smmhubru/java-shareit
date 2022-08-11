@@ -9,8 +9,8 @@ import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 @Component
 public class InMemoryUserStorage implements UserStorage {
-    private final Map<Integer, User> storage = new HashMap<>();
-    private int idCounter = 0;
+    private final Map<Long, User> storage = new HashMap<>();
+    private Long idCounter = 0L;
 
     @Override
     public Optional<User> addUser(User user) {
@@ -23,12 +23,12 @@ public class InMemoryUserStorage implements UserStorage {
     }
 
     @Override
-    public Optional<User> removeUser(int userId) {
+    public Optional<User> removeUser(Long userId) {
         return Optional.ofNullable(storage.remove(userId));
     }
 
     @Override
-    public Optional<User> updateUser(int userId, User user) {
+    public Optional<User> updateUser(Long userId, User user) {
         User searchResult = getUser(userId).orElseThrow(
                 () -> new ResponseStatusException(NOT_FOUND, "Unable to find user")
         );
@@ -46,7 +46,7 @@ public class InMemoryUserStorage implements UserStorage {
     }
 
     @Override
-    public Optional<User> getUser(int userId) {
+    public Optional<User> getUser(Long userId) {
         return Optional.ofNullable(storage.get(userId));
     }
 

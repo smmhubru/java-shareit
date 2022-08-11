@@ -6,11 +6,11 @@ import java.util.Optional;
 public interface ItemStorage {
     Optional<Item> addItem(Item item);
 
-    Optional<Item> updateItem(int itemId, Item item);
+    Optional<Item> updateItem(Long itemId, Item item);
 
-    Optional<Item> getItem(int itemId);
+    Optional<Item> getItem(Long itemId);
 
-    List<Item> getAllItems(int userId);
+    List<Item> getAllItems(Long userId);
 
     List<Item> searchItem(String text);
 }

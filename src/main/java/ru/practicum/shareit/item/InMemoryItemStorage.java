@@ -7,8 +7,8 @@ import java.util.stream.Collectors;
 
 @Component
 public class InMemoryItemStorage implements ItemStorage {
-    private final Map<Integer, Item> storage = new HashMap<>();
-    private int idCounter = 0;
+    private final Map<Long, Item> storage = new HashMap<>();
+    private Long idCounter = 0L;
 
     @Override
     public Optional<Item> addItem(Item item) {
@@ -18,7 +18,7 @@ public class InMemoryItemStorage implements ItemStorage {
     }
 
     @Override
-    public Optional<Item> updateItem(int itemId, Item item) {
+    public Optional<Item> updateItem(Long itemId, Item item) {
         Optional<Item> searchItem = Optional.ofNullable(storage.get(itemId));
         if (searchItem.isEmpty()) return Optional.empty();
         if (item.getName() != null) searchItem.get().setName(item.getName());
@@ -29,12 +29,12 @@ public class InMemoryItemStorage implements ItemStorage {
     }
 
     @Override
-    public Optional<Item> getItem(int itemId) {
+    public Optional<Item> getItem(Long itemId) {
         return Optional.ofNullable(storage.get(itemId));
     }
 
     @Override
-    public List<Item> getAllItems(int userId) {
+    public List<Item> getAllItems(Long userId) {
         return storage.values().stream().filter(item -> item.getOwner().getId() == userId).collect(Collectors.toList());
     }
 

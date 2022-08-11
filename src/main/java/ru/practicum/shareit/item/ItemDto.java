@@ -8,7 +8,7 @@ import ru.practicum.shareit.user.User;
 @Data
 public class ItemDto {
     @NonNull
-    private int id;
+    private Long id;
     @NonNull
     private String name;
     @NonNull

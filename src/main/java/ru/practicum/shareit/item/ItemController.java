@@ -37,7 +37,7 @@ public class ItemController {
     public ResponseEntity<?> createItem(
             HttpServletRequest request,
             @Valid @RequestBody Item item,
-            @RequestHeader(value = "X-Sharer-User-Id") int userId,
+            @RequestHeader(value = "X-Sharer-User-Id") Long userId,
             Errors errors
     ) {
         if (errors.hasErrors()) {
@@ -50,18 +50,18 @@ public class ItemController {
     }
 
     @GetMapping("")
-    public ResponseEntity<?> getAllItems(@RequestHeader(value = "X-Sharer-User-Id") int userId) {
+    public ResponseEntity<?> getAllItems(@RequestHeader(value = "X-Sharer-User-Id") Long userId) {
         return ResponseEntity.ok(itemService.getAllItems(userId));
     }
 
     @GetMapping("/{itemId}")
-    public ResponseEntity<?> getItem(@PathVariable @Positive int itemId) {
+    public ResponseEntity<?> getItem(@PathVariable @Positive Long itemId) {
         return ResponseEntity.ok(itemService.getItem(itemId));
     }
 
     @GetMapping("/search")
     public ResponseEntity<?> searchItem(
-            @RequestHeader(value = "X-Sharer-User-Id") int userId, @PathParam("text") String text) {
+            @RequestHeader(value = "X-Sharer-User-Id") Long userId, @PathParam("text") String text) {
         return ResponseEntity.ok(itemService.searchItemByText(text));
     }
 
@@ -69,8 +69,8 @@ public class ItemController {
     public ResponseEntity<?> updateItem(
             HttpServletRequest request,
             @Valid @RequestBody Item item,
-            @RequestHeader(value = "X-Sharer-User-Id") int userId,
-            @PathVariable @Positive int itemId,
+            @RequestHeader(value = "X-Sharer-User-Id") Long userId,
+            @PathVariable @Positive Long itemId,
             Errors errors
     ) {
         if (errors.hasErrors()) {
