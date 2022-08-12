@@ -1,6 +1,7 @@
 package ru.practicum.shareit.requests;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import ru.practicum.shareit.user.User;
 
 import javax.persistence.*;
@@ -10,6 +11,7 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "requests")
 @Data
+@NoArgsConstructor
 public class ItemRequest {
     @Id
     @Column(name = "request_id")
@@ -20,7 +22,8 @@ public class ItemRequest {
     private String description;
     @NotNull
     @ManyToOne
+    @JoinColumn(name = "requester_id")
     private User requester;
-    @NotNull
-    private LocalDateTime created;
+//    @NotNull
+//    private LocalDateTime created;
 }

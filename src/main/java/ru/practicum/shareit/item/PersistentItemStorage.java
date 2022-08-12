@@ -1,52 +1,58 @@
 package ru.practicum.shareit.item;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Component
-@Qualifier("inMemoryItemStorage")
-public class InMemoryItemStorage implements ItemStorage {
-    private final Map<Long, Item> storage = new HashMap<>();
-    private Long idCounter = 0L;
+@Qualifier("persistentItemStorage")
+@Transactional(readOnly = true)
+public class PersistentItemStorage implements ItemStorage {
+    private final ItemRepository itemRepository;
 
-    @Override
-    public Optional<Item> addItem(Item item) {
-        item.setId(++idCounter);
-        storage.put(item.getId(), item);
-        return Optional.ofNullable(storage.get(item.getId()));
+    @Autowired
+    public PersistentItemStorage(ItemRepository itemRepository) {
+        this.itemRepository = itemRepository;
     }
 
     @Override
+    @Transactional
+    public Optional<Item> addItem(Item item) {
+        return Optional.of(itemRepository.saveAndFlush(item));
+    }
+
+    @Override
+    @Transactional
     public Optional<Item> updateItem(Long itemId, Item item) {
-        Optional<Item> searchItem = Optional.ofNullable(storage.get(itemId));
+        Optional<Item> searchItem = itemRepository.findById(itemId);
         if (searchItem.isEmpty()) return Optional.empty();
         if (item.getName() != null) searchItem.get().setName(item.getName());
         if (item.getDescription() != null) searchItem.get().setDescription(item.getDescription());
         if (item.getAvailable() != null) searchItem.get().setAvailable(item.getAvailable());
         if (item.getOwner() != null) searchItem.get().setOwner(item.getOwner());
-        return Optional.ofNullable(storage.put(itemId, searchItem.get()));
+        return searchItem;
     }
 
     @Override
     public Optional<Item> getItem(Long itemId) {
-        return Optional.ofNullable(storage.get(itemId));
+        return itemRepository.findById(itemId);
     }
 
     @Override
     public List<Item> getAllItems(Long userId) {
-        return storage.values().stream().filter(item -> item.getOwner().getId() == userId).collect(Collectors.toList());
+        return itemRepository.findByOwnerId(userId);
     }
 
     @Override
     public List<Item> searchItem(String text) {
         if (text.isBlank()) return new ArrayList<>();
-        return storage.values().stream()
-                .filter(item -> item.getName().toLowerCase().contains(text.toLowerCase())
-                        || item.getDescription().toLowerCase().contains(text.toLowerCase()))
-                .filter(Item::getAvailable)
-                .collect(Collectors.toList());
+        List<Item> result = itemRepository.findByNameOrDescriptionContainingAllIgnoreCase(text, text);
+        return result.stream().filter(Item::getAvailable).collect(Collectors.toList());
     }
 }

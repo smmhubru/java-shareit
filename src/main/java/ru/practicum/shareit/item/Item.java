@@ -1,6 +1,7 @@
 package ru.practicum.shareit.item;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import ru.practicum.shareit.requests.ItemRequest;
 import ru.practicum.shareit.user.User;
 import ru.practicum.shareit.validator.OnCreate;
@@ -12,6 +13,7 @@ import javax.validation.constraints.NotNull;
 @Entity
 @Table(name = "items")
 @Data
+@NoArgsConstructor
 public class Item {
     @Id
     @Column(name = "item_id")
@@ -29,8 +31,10 @@ public class Item {
     @Column
     private Boolean available;
     @ManyToOne
+    @JoinColumn(name = "owner_id", nullable = false)
     private User owner;
     @ManyToOne
+    @JoinColumn(name = "request_id")
     private ItemRequest request;
 
     public Item(Long id, String name, String description, Boolean available, User owner, ItemRequest request) {

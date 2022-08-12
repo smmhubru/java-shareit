@@ -30,7 +30,7 @@ CREATE TABLE IF NOT EXISTS items (
     description     text            NOT NULL,
     available       bool            NOT NULL,
     owner_id        bigint          NOT NULL,
-    request_id      bigint          NOT NULL,
+    request_id      bigint,
     PRIMARY KEY (item_id),
     FOREIGN KEY (owner_id)
             REFERENCES users (user_id)
