@@ -1,6 +1,7 @@
 package ru.practicum.shareit.user;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import ru.practicum.shareit.validator.OnCreate;
 
 import javax.persistence.*;
@@ -11,6 +12,7 @@ import javax.validation.constraints.NotNull;
 @Entity
 @Table(name = "users")
 @Data
+@NoArgsConstructor
 public class User {
     @Id
     @Column(name = "user_id")
@@ -23,7 +25,7 @@ public class User {
     @Email(message = "Email should be in right format")
     @NotBlank(message = "Email can't be blank", groups = OnCreate.class)
     @NotNull(message = "Email can't be null", groups = OnCreate.class)
-    @Column
+    @Column(unique = true)
     private String email;
 
     public User(Long id, String name, String email) {
@@ -31,4 +33,6 @@ public class User {
         this.name = name;
         this.email = email;
     }
+
+
 }

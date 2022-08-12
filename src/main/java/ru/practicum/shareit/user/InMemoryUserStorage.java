@@ -1,5 +1,6 @@
 package ru.practicum.shareit.user;
 
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -8,6 +9,7 @@ import java.util.*;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 @Component
+@Qualifier("inMemoryUserStorage")
 public class InMemoryUserStorage implements UserStorage {
     private final Map<Long, User> storage = new HashMap<>();
     private Long idCounter = 0L;
