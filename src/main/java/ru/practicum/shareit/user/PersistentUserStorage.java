@@ -2,10 +2,13 @@ package ru.practicum.shareit.user;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
+import javax.persistence.EntityManager;
 import java.util.List;
 import java.util.Optional;
 
@@ -13,7 +16,6 @@ import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 @Component
 @Qualifier("persistentUserStorage")
-@Transactional(readOnly = true)
 public class PersistentUserStorage implements UserStorage {
     private final UserRepository userRepository;
 
@@ -23,12 +25,13 @@ public class PersistentUserStorage implements UserStorage {
     }
 
     @Override
-    @Transactional
     public Optional<User> addUser(User user) {
-        if (isEmailUnique(user)) {
-            return Optional.of(userRepository.saveAndFlush(user));
+        try {
+            userRepository.save(user);
+            return Optional.of(user);
+        } catch (Exception e) {
+            return Optional.empty();
         }
-        return Optional.empty();
     }
 
     @Override
