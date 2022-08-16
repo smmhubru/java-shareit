@@ -60,7 +60,7 @@ public class BookingService {
                     () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Unable to find booking by ID.")
             );
         } else {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Only requester or owner can see this");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Only requester or owner can see this");
         }
     }
 }
