@@ -1,8 +1,8 @@
 CREATE TYPE IF NOT EXISTS booking_status AS ENUM (
-    'waiting',
-    'approved',
-    'rejected',
-    'cancelled'
+    'WAITING',
+    'APPROVED',
+    'REJECTED',
+    'CANCELLED'
 );
 
 CREATE TABLE IF NOT EXISTS users (
