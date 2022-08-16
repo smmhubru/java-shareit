@@ -9,6 +9,8 @@ import ru.practicum.shareit.item.ItemStorage;
 import ru.practicum.shareit.user.User;
 import ru.practicum.shareit.user.UserStorage;
 
+import java.util.Objects;
+
 @Service
 public class BookingService {
     private final BookingStorage bookingStorage;
@@ -49,9 +51,16 @@ public class BookingService {
         );
     }
 
-    public Booking getBookingById(Long bookingId) {
-        return bookingStorage.getBookingById(bookingId).orElseThrow(
-                () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Unable to find booking by ID.")
+    public Booking getBookingById(Long userId, Long bookingId) {
+        Booking booking = bookingStorage.getBookingById(bookingId).orElseThrow(
+                () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Unable to find booking")
         );
+        if (Objects.equals(userId, booking.getBooker().getId()) || Objects.equals(userId, booking.getItem().getOwner().getId())) {
+            return bookingStorage.getBookingById(bookingId).orElseThrow(
+                    () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Unable to find booking by ID.")
+            );
+        } else {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Only requester or owner can see this");
+        }
     }
 }
