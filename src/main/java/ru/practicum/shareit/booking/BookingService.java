@@ -9,6 +9,7 @@ import ru.practicum.shareit.item.ItemStorage;
 import ru.practicum.shareit.user.User;
 import ru.practicum.shareit.user.UserStorage;
 
+import java.util.List;
 import java.util.Objects;
 
 @Service
@@ -62,5 +63,9 @@ public class BookingService {
         } else {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Only requester or owner can see this");
         }
+    }
+
+    public List<Booking> getBookingsByState(Long userId, BookingState state) {
+        return bookingStorage.getBookingsByState(userId, state);
     }
 }

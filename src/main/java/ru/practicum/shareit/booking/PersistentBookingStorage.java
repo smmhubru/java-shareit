@@ -11,6 +11,7 @@ import ru.practicum.shareit.item.ItemStorage;
 import ru.practicum.shareit.user.User;
 import ru.practicum.shareit.user.UserStorage;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -75,5 +76,13 @@ public class PersistentBookingStorage implements BookingStorage {
         } catch (Exception e) {
             return Optional.empty();
         }
+    }
+
+    @Override
+    public List<Booking> getBookingsByState(Long userId, BookingState state) {
+        if (state.equals(BookingState.ALL)) {
+            return bookingRepository.findAllByBookerId(userId);
+        }
+        return null;
     }
 }
