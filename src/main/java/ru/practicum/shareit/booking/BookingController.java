@@ -25,7 +25,7 @@ public class BookingController {
     @PostMapping("")
     public ResponseEntity<?> createBooking(HttpServletRequest request,
                                            @RequestHeader(value = "X-Sharer-User-Id") Long userId,
-                                           @Valid @RequestBody Booking booking,
+                                           @Valid @RequestBody BookingCreationDto booking,
                                            Errors errors) {
         if (errors.hasErrors()) {
             log.info("Validation error with request: "+ request.getRequestURI());
@@ -34,5 +34,15 @@ public class BookingController {
         return ResponseEntity.ok(bookingService.createBooking(userId, booking));
     }
 
+    @PatchMapping("/{bookingId}")
+    public ResponseEntity<?> approveBooking(@RequestHeader(value = "X-Sharer-User-Id") Long userId,
+                                            @PathVariable Long bookingId,
+                                            @RequestParam(required = true) boolean approved) {
+        return ResponseEntity.ok(bookingService.approveBooking(userId, bookingId, approved));
+    }
 
+    @GetMapping("/{bookingId}")
+    public ResponseEntity<?> getBookingById(@PathVariable Long bookingId) {
+        return ResponseEntity.ok(bookingService.getBookingById(bookingId));
+    }
 }

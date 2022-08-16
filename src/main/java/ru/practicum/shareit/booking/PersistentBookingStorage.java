@@ -2,9 +2,14 @@ package ru.practicum.shareit.booking;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
+import org.springframework.web.server.ResponseStatusException;
 import ru.practicum.shareit.item.Item;
 import ru.practicum.shareit.item.ItemRepository;
+import ru.practicum.shareit.item.ItemStorage;
+import ru.practicum.shareit.user.User;
+import ru.practicum.shareit.user.UserStorage;
 
 import java.util.Optional;
 import java.util.Set;
@@ -13,27 +18,32 @@ import java.util.Set;
 @Qualifier("persistentBookingStorage")
 public class PersistentBookingStorage implements BookingStorage {
     private final BookingRepository bookingRepository;
-    private final ItemRepository itemRepository;
+    private final ItemStorage itemStorage;
+    private final UserStorage userStorage;
 
     @Autowired
     public PersistentBookingStorage(BookingRepository bookingRepository,
-                                    ItemRepository itemRepository) {
+                                    ItemRepository itemRepository,
+                                    @Qualifier("persistentItemStorage") ItemStorage itemStorage,
+                                    @Qualifier("persistentUserStorage") UserStorage userStorage) {
         this.bookingRepository = bookingRepository;
-        this.itemRepository = itemRepository;
+        this.itemStorage = itemStorage;
+        this.userStorage = userStorage;
     }
 
     @Override
-    public Optional<Booking> addBooking(Booking booking) {
-        Optional<Item> item = itemRepository.findById(booking.getItemId());
-        if (item.isEmpty()) return Optional.empty();
-        if (!item.get().getAvailable()) return Optional.empty();
-        booking.setStatus(BookingStatus.WAITING);
+    public Optional<Booking> addBooking(BookingCreationDto booking) {
+        Item item = itemStorage.getItem(booking.getItemId()).orElseThrow(
+                () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Unable to find item")
+        );
+        User booker = userStorage.getUser(booking.getBookerId()).orElseThrow(
+                () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Unable to find booker")
+        );
+        if (!item.getAvailable()) return Optional.empty();
+        Booking result = booking.toBooking(item, booker);
         try {
-            System.out.println("TRY TO SAVE " + booking);
-            bookingRepository.save(booking);
-            return Optional.of(booking);
+            return Optional.of(bookingRepository.save(result));
         } catch (Exception e) {
-            System.out.println("UNABLE TO SAVE booking: " + booking + " " + e.getMessage());
             return Optional.empty();
         }
     }
@@ -45,11 +55,25 @@ public class PersistentBookingStorage implements BookingStorage {
 
     @Override
     public Optional<Booking> getBookingById(Long bookingId) {
-        return Optional.empty();
+        return bookingRepository.findById(bookingId);
     }
 
     @Override
     public Set<Booking> getAllBookingsForUser(Long userId) {
         return null;
+    }
+
+    @Override
+    public Optional<Booking> approveBooking(Booking booking, boolean approved) {
+        try {
+            if (approved) {
+                booking.setStatus(BookingStatus.APPROVED);
+            } else {
+                booking.setStatus(BookingStatus.REJECTED);
+            }
+            return Optional.of(booking);
+        } catch (Exception e) {
+            return Optional.empty();
+        }
     }
 }

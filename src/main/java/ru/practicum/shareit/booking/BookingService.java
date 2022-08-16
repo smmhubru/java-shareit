@@ -23,17 +23,35 @@ public class BookingService {
         this.userStorage = userStorage;
     }
 
-    public Booking createBooking(Long userId, Booking booking) {
+    public Booking createBooking(Long userId, BookingCreationDto booking) {
+        booking.setBookerId(userId);
+        booking.setStatus(BookingStatus.WAITING);
+        return bookingStorage.addBooking(booking).orElseThrow(
+                () -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Unable to add booking")
+        );
+    }
+
+    public Booking approveBooking(Long userId, Long bookingId, boolean approved) {
         User user = userStorage.getUser(userId).orElseThrow(
                 () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Unable to find user")
         );
-        Item item = itemStorage.getItem(booking.getItemId()).orElseThrow(
+        Booking booking = bookingStorage.getBookingById(bookingId).orElseThrow(
+                () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Unable to find booking")
+        );
+        Item item = itemStorage.getItem(booking.getItem().getId()).orElseThrow(
                 () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Unable to find item")
         );
-        booking.setBookerId(userId);
-        System.out.println("SET BOOKER ID: " + booking);
-        return bookingStorage.addBooking(booking).orElseThrow(
-                () -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Unable to add booking")
+        if (userId != item.getOwner().getId()) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Only item owner can approve booking");
+        }
+        return bookingStorage.approveBooking(booking, approved).orElseThrow(
+                () -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Unable to approve booking")
+        );
+    }
+
+    public Booking getBookingById(Long bookingId) {
+        return bookingStorage.getBookingById(bookingId).orElseThrow(
+                () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Unable to find booking by ID.")
         );
     }
 }
