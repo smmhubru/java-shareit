@@ -29,7 +29,7 @@ public class BookingController {
                                            @Valid @RequestBody BookingCreationDto booking,
                                            Errors errors) {
         if (errors.hasErrors()) {
-            log.info("Validation error with request: "+ request.getRequestURI());
+            log.info("Validation error with request: " + request.getRequestURI());
             return ResponseEntity.badRequest().body(ValidationErrorBuilder.fromBindingErrors(errors));
         }
         return ResponseEntity.ok(bookingService.createBooking(userId, booking));
