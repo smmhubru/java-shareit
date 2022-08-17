@@ -5,9 +5,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.server.ResponseStatusException;
-import ru.practicum.shareit.item.Item;
-import ru.practicum.shareit.item.ItemRepository;
-import ru.practicum.shareit.item.ItemStorage;
+import ru.practicum.shareit.item.*;
 import ru.practicum.shareit.user.User;
 import ru.practicum.shareit.user.UserStorage;
 
@@ -35,14 +33,14 @@ public class PersistentBookingStorage implements BookingStorage {
 
     @Override
     public Optional<Booking> addBooking(BookingCreationDto booking) {
-        Item item = itemStorage.getItem(booking.getItemId()).orElseThrow(
+        ItemDto item = itemStorage.getItem(booking.getItemId()).orElseThrow(
                 () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Unable to find item")
         );
         User booker = userStorage.getUser(booking.getBookerId()).orElseThrow(
                 () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Unable to find booker")
         );
         if (!item.getAvailable()) return Optional.empty();
-        Booking result = booking.toBooking(item, booker);
+        Booking result = booking.toBooking(ItemMapper.toItem(item), booker);
         try {
             return Optional.of(bookingRepository.save(result));
         } catch (Exception e) {

@@ -6,8 +6,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.booking.Booking;
 import ru.practicum.shareit.booking.BookingRepository;
-import ru.practicum.shareit.user.User;
-import ru.practicum.shareit.user.UserRepository;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -21,15 +19,12 @@ import java.util.stream.Collectors;
 public class PersistentItemStorage implements ItemStorage {
     private final ItemRepository itemRepository;
     private final BookingRepository bookingRepository;
-    private final UserRepository userRepository;
 
     @Autowired
     public PersistentItemStorage(ItemRepository itemRepository,
-                                 BookingRepository bookingRepository,
-                                 UserRepository userRepository) {
+                                 BookingRepository bookingRepository) {
         this.itemRepository = itemRepository;
         this.bookingRepository = bookingRepository;
-        this.userRepository = userRepository;
     }
 
     @Override
@@ -51,13 +46,20 @@ public class PersistentItemStorage implements ItemStorage {
     }
 
     @Override
-    public Optional<Item> getItem(Long itemId) {
-        return itemRepository.findById(itemId);
+    public Optional<ItemDto> getItem(Long itemId) {
+        Optional<Item> item = itemRepository.findById(itemId);
+        if (item.isEmpty()) return Optional.empty();
+        Optional<Booking> lastBooking = bookingRepository.findFirstByItemAndItemOwnerAndEndBeforeOrderByStartDesc(
+                item.get(), item.get().getOwner(), LocalDateTime.now());
+        Optional<Booking> nextBooking = bookingRepository.findFirstByItemAndItemOwnerAndStartAfterOrderByStartDesc(
+                item.get(), item.get().getOwner(), LocalDateTime.now()
+        );
+        return Optional.of(ItemMapper.toItemDto(itemRepository.findById(itemId).get(),
+                lastBooking.orElse(null), nextBooking.orElse(null)));
     }
 
     @Override
     public List<ItemDto> getAllItems(Long userId) {
-//        Optional<User> owner = userRepository.findById(userId);
         List<Item> result = itemRepository.findByOwnerId(userId);
         return result.stream().map(i -> {
             Optional<Booking> lastBooking = bookingRepository.findFirstByItemAndItemOwnerAndEndBeforeOrderByStartDesc(

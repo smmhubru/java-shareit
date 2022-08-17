@@ -8,7 +8,7 @@ public interface ItemStorage {
 
     Optional<Item> updateItem(Long itemId, Item item);
 
-    Optional<Item> getItem(Long itemId);
+    Optional<ItemDto> getItem(Long itemId);
 
     List<ItemDto> getAllItems(Long userId);
 

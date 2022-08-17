@@ -23,7 +23,7 @@ public class ItemService {
         );
     }
 
-    public Item getItem(Long itemId) {
+    public ItemDto getItem(Long itemId) {
         return storage.getItem(itemId).orElseThrow(
                 () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Unable to find item")
         );

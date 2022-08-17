@@ -17,6 +17,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import javax.validation.constraints.Positive;
 import javax.websocket.server.PathParam;
+import java.util.Objects;
 
 @RestController
 @Slf4j
@@ -55,8 +56,14 @@ public class ItemController {
     }
 
     @GetMapping("/{itemId}")
-    public ResponseEntity<?> getItem(@PathVariable @Positive Long itemId) {
-        return ResponseEntity.ok(itemService.getItem(itemId));
+    public ResponseEntity<?> getItem(@RequestHeader(value = "X-Sharer-User-Id") Long userId,
+                                     @PathVariable @Positive Long itemId) {
+        ItemDto result = itemService.getItem(itemId);
+        if (!Objects.equals(result.getOwner().getId(), userId)) {
+            result.setLastBooking(null);
+            result.setNextBooking(null);
+        }
+        return ResponseEntity.ok(result);
     }
 
     @GetMapping("/search")

@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
-import ru.practicum.shareit.item.Item;
+import ru.practicum.shareit.item.ItemDto;
 import ru.practicum.shareit.item.ItemStorage;
 import ru.practicum.shareit.user.User;
 import ru.practicum.shareit.user.UserStorage;
@@ -27,7 +27,7 @@ public class BookingService {
     }
 
     public Booking createBooking(Long userId, BookingCreationDto booking) {
-        Item item = itemStorage.getItem(booking.getItemId()).orElseThrow(
+        ItemDto item = itemStorage.getItem(booking.getItemId()).orElseThrow(
                 () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Unable to find item")
         );
         if (Objects.equals(item.getOwner().getId(), userId)) {
@@ -47,7 +47,7 @@ public class BookingService {
         Booking booking = bookingStorage.getBookingById(bookingId).orElseThrow(
                 () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Unable to find booking")
         );
-        Item item = itemStorage.getItem(booking.getItem().getId()).orElseThrow(
+        ItemDto item = itemStorage.getItem(booking.getItem().getId()).orElseThrow(
                 () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Unable to find item")
         );
         if (!Objects.equals(userId, item.getOwner().getId())) {
