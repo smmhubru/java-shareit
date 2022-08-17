@@ -12,13 +12,22 @@ import java.util.Set;
  */
 public interface BookingStorage {
     Optional<Booking> addBooking(BookingCreationDto booking);
+
     Optional<Booking> updateBooking(Long bookingId, Booking booking);
+
     Optional<Booking> getBookingById(Long bookingId);
+
     Set<Booking> getAllBookingsForUser(Long userId);
+
     Optional<Booking> approveBooking(Booking booking, boolean approved);
+
     List<Booking> getBookingsByState(User user, BookingState state);
+
     List<Booking> getBookingsByOwner(User user, BookingState state);
+
     Optional<Booking> getLastBookingByOwnerForItem(Item item);
+
     Optional<Booking> getNextBookingByOwnerForItem(Item item);
+
     boolean checkUserBookedItemInPast(User user, Item item);
 }

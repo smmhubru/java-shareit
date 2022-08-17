@@ -22,6 +22,7 @@ public class BookingController {
     public BookingController(BookingService bookingService) {
         this.bookingService = bookingService;
     }
+
     @PostMapping("")
     public ResponseEntity<?> createBooking(HttpServletRequest request,
                                            @RequestHeader(value = "X-Sharer-User-Id") Long userId,
