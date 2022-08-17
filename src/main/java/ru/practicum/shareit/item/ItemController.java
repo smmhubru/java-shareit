@@ -87,7 +87,7 @@ public class ItemController {
             return ResponseEntity.badRequest().body(ValidationErrorBuilder.fromBindingErrors(errors));
         }
         User itemOwner = itemService.getItem(itemId).getOwner();
-        if (itemOwner.getId() != userId) throw new ResponseStatusException(HttpStatus.FORBIDDEN, "No permissions");
+        if (!Objects.equals(itemOwner.getId(), userId)) throw new ResponseStatusException(HttpStatus.FORBIDDEN, "No permissions");
         return ResponseEntity.ok(itemService.updateItem(itemId, item));
     }
 
