@@ -26,11 +26,13 @@ import java.util.Objects;
 public class ItemController {
     private final ItemService itemService;
     private final UserService userService;
+    private final CommentService commentService;
 
     @Autowired
-    public ItemController(ItemService itemService, UserService userService) {
+    public ItemController(ItemService itemService, UserService userService, CommentService commentService) {
         this.itemService = itemService;
         this.userService = userService;
+        this.commentService = commentService;
     }
 
     @PostMapping("")
@@ -87,5 +89,22 @@ public class ItemController {
         User itemOwner = itemService.getItem(itemId).getOwner();
         if (itemOwner.getId() != userId) throw new ResponseStatusException(HttpStatus.FORBIDDEN, "No permissions");
         return ResponseEntity.ok(itemService.updateItem(itemId, item));
+    }
+
+    @PostMapping("/{itemId}/comment")
+    @Validated(OnCreate.class)
+    public ResponseEntity<?> addComment(
+            HttpServletRequest request,
+            @Valid @RequestBody Comment comment,
+            @RequestHeader(value = "X-Sharer-User-Id") Long userId,
+            @PathVariable @Positive Long itemId,
+            Errors errors
+    ) {
+        if (errors.hasErrors()) {
+            log.info("Validation error with request: " + request.getRequestURI());
+            return ResponseEntity.badRequest().body(ValidationErrorBuilder.fromBindingErrors(errors));
+        }
+        return ResponseEntity.ok(commentService.addComment(userId, itemId, comment));
+
     }
 }

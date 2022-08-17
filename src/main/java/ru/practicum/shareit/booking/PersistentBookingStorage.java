@@ -1,7 +1,6 @@
 package ru.practicum.shareit.booking;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.server.ResponseStatusException;
@@ -16,7 +15,6 @@ import java.util.Optional;
 import java.util.Set;
 
 @Component
-@Qualifier("persistentBookingStorage")
 public class PersistentBookingStorage implements BookingStorage {
     private final BookingRepository bookingRepository;
     private final ItemStorage itemStorage;
@@ -24,8 +22,8 @@ public class PersistentBookingStorage implements BookingStorage {
 
     @Autowired
     public PersistentBookingStorage(BookingRepository bookingRepository,
-                                    @Qualifier("persistentItemStorage") ItemStorage itemStorage,
-                                    @Qualifier("persistentUserStorage") UserStorage userStorage) {
+                                    ItemStorage itemStorage,
+                                    UserStorage userStorage) {
         this.bookingRepository = bookingRepository;
         this.itemStorage = itemStorage;
         this.userStorage = userStorage;
@@ -133,5 +131,11 @@ public class PersistentBookingStorage implements BookingStorage {
     @Override
     public Optional<Booking> getNextBookingByOwnerForItem(Item item) {
         return bookingRepository.findFirstByItemAndItemOwnerAndStartAfterOrderByStartDesc(item, item.getOwner(), LocalDateTime.now());
+    }
+
+    @Override
+    public boolean checkUserBookedItemInPast(User user, Item item) {
+        Optional<Booking> booking = bookingRepository.findFirstByItemAndBookerAndEndBefore(item, user, LocalDateTime.now());
+        return booking.isPresent();
     }
 }

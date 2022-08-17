@@ -1,21 +1,16 @@
 package ru.practicum.shareit.user;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
-import javax.persistence.EntityManager;
 import java.util.List;
 import java.util.Optional;
 
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 @Component
-@Qualifier("persistentUserStorage")
 public class PersistentUserStorage implements UserStorage {
     private final UserRepository userRepository;
 

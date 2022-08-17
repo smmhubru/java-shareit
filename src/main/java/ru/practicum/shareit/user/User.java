@@ -33,6 +33,4 @@ public class User {
         this.name = name;
         this.email = email;
     }
-
-
 }

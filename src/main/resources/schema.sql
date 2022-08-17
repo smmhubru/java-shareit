@@ -67,6 +67,8 @@ CREATE TABLE IF NOT EXISTS comments (
     text            text            NOT NULL,
     item_id         bigint          NOT NULL,
     author_id       bigint          NOT NULL,
+    created         timestamp without time zone
+                                    NOT NULL,
     PRIMARY KEY (comment_id),
     FOREIGN KEY (item_id)
             REFERENCES items

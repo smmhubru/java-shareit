@@ -1,7 +1,6 @@
 package ru.practicum.shareit.item;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -13,7 +12,7 @@ public class ItemService {
     private final ItemStorage storage;
 
     @Autowired
-    public ItemService(@Qualifier("persistentItemStorage") ItemStorage storage) {
+    public ItemService(ItemStorage storage) {
         this.storage = storage;
     }
 

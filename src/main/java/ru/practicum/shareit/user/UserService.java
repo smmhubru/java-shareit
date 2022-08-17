@@ -13,7 +13,7 @@ public class UserService {
     private final UserStorage storage;
 
     @Autowired
-    public UserService(@Qualifier("persistentUserStorage") UserStorage storage) {
+    public UserService(UserStorage storage) {
         this.storage = storage;
     }
 

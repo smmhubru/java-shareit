@@ -20,4 +20,5 @@ public interface BookingStorage {
     List<Booking> getBookingsByOwner(User user, BookingState state);
     Optional<Booking> getLastBookingByOwnerForItem(Item item);
     Optional<Booking> getNextBookingByOwnerForItem(Item item);
+    boolean checkUserBookedItemInPast(User user, Item item);
 }

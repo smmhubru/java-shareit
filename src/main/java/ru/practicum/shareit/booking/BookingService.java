@@ -1,5 +1,6 @@
 package ru.practicum.shareit.booking;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -18,6 +19,7 @@ public class BookingService {
     private final ItemStorage itemStorage;
     private final UserStorage userStorage;
 
+    @Autowired
     public BookingService(@Qualifier("persistentBookingStorage") BookingStorage bookingStorage,
                           @Qualifier("persistentItemStorage") ItemStorage itemStorage,
                           @Qualifier("persistentUserStorage") UserStorage userStorage) {
