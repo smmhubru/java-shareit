@@ -11,6 +11,8 @@ import ru.practicum.shareit.item.ItemStorage;
 import ru.practicum.shareit.user.User;
 import ru.practicum.shareit.user.UserStorage;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -72,16 +74,56 @@ public class PersistentBookingStorage implements BookingStorage {
             } else {
                 booking.setStatus(BookingStatus.REJECTED);
             }
-            return Optional.of(booking);
+            return Optional.of(bookingRepository.save(booking));
         } catch (Exception e) {
             return Optional.empty();
         }
     }
 
     @Override
-    public List<Booking> getBookingsByState(Long userId, BookingState state) {
+    public List<Booking> getBookingsByState(User user, BookingState state) {
         if (state.equals(BookingState.ALL)) {
-            return bookingRepository.findAllByBookerId(userId);
+            return bookingRepository.findAllByBookerOrderByStartDesc(user);
+        }
+        if (state.equals(BookingState.PAST)) {
+            return bookingRepository.findAllByBookerAndEndBeforeOrderByStartDesc(user, LocalDateTime.now());
+        }
+        if (state.equals(BookingState.FUTURE)) {
+           return bookingRepository.findAllByBookerAndStartAfterOrderByStartDesc(user, LocalDateTime.now());
+        }
+        if (state.equals(BookingState.CURRENT)) {
+            return bookingRepository.findAllByBookerAndStartBeforeAndEndAfterOrderByStartDesc(user, LocalDateTime.now(),
+                    LocalDateTime.now());
+        }
+        if (state.equals(BookingState.WAITING)) {
+            return bookingRepository.findAllByBookerAndStatusOrderByStartDesc(user, BookingStatus.WAITING);
+        }
+        if (state.equals(BookingState.REJECTED)) {
+            return bookingRepository.findAllByBookerAndStatusOrderByStartDesc(user, BookingStatus.REJECTED);
+        }
+        return new ArrayList<>();
+    }
+
+    @Override
+    public List<Booking> getBookingsByOwner(User user, BookingState state) {
+        if (state.equals(BookingState.ALL)) {
+            return bookingRepository.findAllByItemOwnerOrderByStartDesc(user);
+        }
+        if (state.equals(BookingState.PAST)) {
+            return bookingRepository.findAllByItemOwnerAndEndBeforeOrderByStartDesc(user, LocalDateTime.now());
+        }
+        if (state.equals(BookingState.FUTURE)) {
+            return bookingRepository.findAllByItemOwnerAndStartAfterOrderByStartDesc(user, LocalDateTime.now());
+        }
+        if (state.equals(BookingState.CURRENT)) {
+            return bookingRepository.findAllByItemOwnerAndStartBeforeAndEndAfterOrderByStartDesc(user,
+                    LocalDateTime.now(), LocalDateTime.now());
+        }
+        if (state.equals(BookingState.WAITING)) {
+            return bookingRepository.findAllByItemOwnerAndStatusOrderByStartDesc(user, BookingStatus.WAITING);
+        }
+        if (state.equals(BookingState.REJECTED)) {
+            return bookingRepository.findAllByItemOwnerAndStatusOrderByStartDesc(user, BookingStatus.REJECTED);
         }
         return null;
     }

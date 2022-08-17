@@ -27,6 +27,12 @@ public class BookingService {
     }
 
     public Booking createBooking(Long userId, BookingCreationDto booking) {
+        Item item = itemStorage.getItem(booking.getItemId()).orElseThrow(
+                () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Unable to find item")
+        );
+        if (Objects.equals(item.getOwner().getId(), userId)) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "You can't book item you already own.");
+        }
         booking.setBookerId(userId);
         booking.setStatus(BookingStatus.WAITING);
         return bookingStorage.addBooking(booking).orElseThrow(
@@ -44,8 +50,11 @@ public class BookingService {
         Item item = itemStorage.getItem(booking.getItem().getId()).orElseThrow(
                 () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Unable to find item")
         );
-        if (userId != item.getOwner().getId()) {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Only item owner can approve booking");
+        if (!Objects.equals(userId, item.getOwner().getId())) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Only item owner can approve booking");
+        }
+        if (!booking.getStatus().equals(BookingStatus.WAITING)) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "You can approve booking with WAITING status");
         }
         return bookingStorage.approveBooking(booking, approved).orElseThrow(
                 () -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Unable to approve booking")
@@ -66,6 +75,16 @@ public class BookingService {
     }
 
     public List<Booking> getBookingsByState(Long userId, BookingState state) {
-        return bookingStorage.getBookingsByState(userId, state);
+        User user = userStorage.getUser(userId).orElseThrow(
+                () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Unable to find user")
+        );
+        return bookingStorage.getBookingsByState(user, state);
+    }
+
+    public List<Booking> getBookingsByOwner(Long userId, BookingState state) {
+        User user = userStorage.getUser(userId).orElseThrow(
+                () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Unable to find user")
+        );
+        return bookingStorage.getBookingsByOwner(user, state);
     }
 }
