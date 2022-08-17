@@ -29,7 +29,7 @@ public class ItemService {
         );
     }
 
-    public List<Item> getAllItems(Long userId) {
+    public List<ItemDto> getAllItems(Long userId) {
         return storage.getAllItems(userId);
     }
 

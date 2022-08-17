@@ -1,5 +1,6 @@
 package ru.practicum.shareit.booking;
 
+import ru.practicum.shareit.item.Item;
 import ru.practicum.shareit.user.User;
 
 import java.util.List;
@@ -17,4 +18,6 @@ public interface BookingStorage {
     Optional<Booking> approveBooking(Booking booking, boolean approved);
     List<Booking> getBookingsByState(User user, BookingState state);
     List<Booking> getBookingsByOwner(User user, BookingState state);
+    Optional<Booking> getLastBookingByOwnerForItem(Item item);
+    Optional<Booking> getNextBookingByOwnerForItem(Item item);
 }

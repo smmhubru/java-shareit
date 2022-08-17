@@ -10,7 +10,7 @@ public interface ItemStorage {
 
     Optional<Item> getItem(Long itemId);
 
-    List<Item> getAllItems(Long userId);
+    List<ItemDto> getAllItems(Long userId);
 
     List<Item> searchItem(String text);
 }

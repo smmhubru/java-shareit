@@ -26,7 +26,6 @@ public class PersistentBookingStorage implements BookingStorage {
 
     @Autowired
     public PersistentBookingStorage(BookingRepository bookingRepository,
-                                    ItemRepository itemRepository,
                                     @Qualifier("persistentItemStorage") ItemStorage itemStorage,
                                     @Qualifier("persistentUserStorage") UserStorage userStorage) {
         this.bookingRepository = bookingRepository;
@@ -126,5 +125,15 @@ public class PersistentBookingStorage implements BookingStorage {
             return bookingRepository.findAllByItemOwnerAndStatusOrderByStartDesc(user, BookingStatus.REJECTED);
         }
         return null;
+    }
+
+    @Override
+    public Optional<Booking> getLastBookingByOwnerForItem(Item item) {
+        return bookingRepository.findFirstByItemAndItemOwnerAndEndBeforeOrderByStartDesc(item, item.getOwner(), LocalDateTime.now());
+    }
+
+    @Override
+    public Optional<Booking> getNextBookingByOwnerForItem(Item item) {
+        return bookingRepository.findFirstByItemAndItemOwnerAndStartAfterOrderByStartDesc(item, item.getOwner(), LocalDateTime.now());
     }
 }

@@ -1,22 +1,20 @@
 package ru.practicum.shareit.item;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NonNull;
+import ru.practicum.shareit.booking.BookingShortDto;
 import ru.practicum.shareit.requests.ItemRequest;
 import ru.practicum.shareit.user.User;
 
 @Data
+@AllArgsConstructor
 public class ItemDto {
-    @NonNull
     private Long id;
-    @NonNull
     private String name;
-    @NonNull
     private String description;
-    @NonNull
     private Boolean available;
-    @NonNull
     private User owner;
-    @NonNull
     private ItemRequest request;
+    private BookingShortDto lastBooking;
+    private BookingShortDto nextBooking;
 }
