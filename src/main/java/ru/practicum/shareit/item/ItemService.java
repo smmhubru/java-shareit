@@ -22,17 +22,17 @@ public class ItemService {
         );
     }
 
-    public Item getItem(int itemId) {
+    public ItemDto getItem(Long itemId) {
         return storage.getItem(itemId).orElseThrow(
                 () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Unable to find item")
         );
     }
 
-    public List<Item> getAllItems(int userId) {
+    public List<ItemDto> getAllItems(Long userId) {
         return storage.getAllItems(userId);
     }
 
-    public Item updateItem(int itemId, Item item) {
+    public Item updateItem(Long itemId, Item item) {
         return storage.updateItem(itemId, item).orElseThrow(
                 () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Unable to find item")
         );

@@ -9,11 +9,11 @@ import java.util.Optional;
 public interface UserStorage {
     Optional<User> addUser(User user);
 
-    Optional<User> removeUser(int userId);
+    Optional<User> removeUser(Long userId);
 
-    Optional<User> updateUser(int userId, User user);
+    Optional<User> updateUser(Long userId, User user);
 
-    Optional<User> getUser(int userId);
+    Optional<User> getUser(Long userId);
 
     List<User> getAllUsers();
 }

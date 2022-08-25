@@ -22,19 +22,19 @@ public class UserService {
         );
     }
 
-    public User updateUser(int userId, User user) {
+    public User updateUser(Long userId, User user) {
         return storage.updateUser(userId, user).orElseThrow(
                 () -> new ResponseStatusException(HttpStatus.CONFLICT, "Unable to edit user")
         );
     }
 
-    public User getUser(int userId) {
+    public User getUser(Long userId) {
         return storage.getUser(userId).orElseThrow(
                 () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Unable to find user")
         );
     }
 
-    public User removeUser(int userId) {
+    public User removeUser(Long userId) {
         return storage.removeUser(userId).orElseThrow(
                 () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Unable to find user")
         );

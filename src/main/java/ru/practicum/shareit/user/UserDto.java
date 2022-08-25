@@ -6,7 +6,7 @@ import lombok.NonNull;
 @Data
 public class UserDto {
     @NonNull
-    private int id;
+    private Long id;
     @NonNull
     private String name;
     @NonNull

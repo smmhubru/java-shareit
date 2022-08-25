@@ -17,6 +17,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import javax.validation.constraints.Positive;
 import javax.websocket.server.PathParam;
+import java.util.Objects;
 
 @RestController
 @Slf4j
@@ -25,11 +26,13 @@ import javax.websocket.server.PathParam;
 public class ItemController {
     private final ItemService itemService;
     private final UserService userService;
+    private final CommentService commentService;
 
     @Autowired
-    public ItemController(ItemService itemService, UserService userService) {
+    public ItemController(ItemService itemService, UserService userService, CommentService commentService) {
         this.itemService = itemService;
         this.userService = userService;
+        this.commentService = commentService;
     }
 
     @PostMapping("")
@@ -37,7 +40,7 @@ public class ItemController {
     public ResponseEntity<?> createItem(
             HttpServletRequest request,
             @Valid @RequestBody Item item,
-            @RequestHeader(value = "X-Sharer-User-Id") int userId,
+            @RequestHeader(value = "X-Sharer-User-Id") Long userId,
             Errors errors
     ) {
         if (errors.hasErrors()) {
@@ -50,18 +53,24 @@ public class ItemController {
     }
 
     @GetMapping("")
-    public ResponseEntity<?> getAllItems(@RequestHeader(value = "X-Sharer-User-Id") int userId) {
+    public ResponseEntity<?> getAllItems(@RequestHeader(value = "X-Sharer-User-Id") Long userId) {
         return ResponseEntity.ok(itemService.getAllItems(userId));
     }
 
     @GetMapping("/{itemId}")
-    public ResponseEntity<?> getItem(@PathVariable @Positive int itemId) {
-        return ResponseEntity.ok(itemService.getItem(itemId));
+    public ResponseEntity<?> getItem(@RequestHeader(value = "X-Sharer-User-Id") Long userId,
+                                     @PathVariable @Positive Long itemId) {
+        ItemDto result = itemService.getItem(itemId);
+        if (!Objects.equals(result.getOwner().getId(), userId)) {
+            result.setLastBooking(null);
+            result.setNextBooking(null);
+        }
+        return ResponseEntity.ok(result);
     }
 
     @GetMapping("/search")
     public ResponseEntity<?> searchItem(
-            @RequestHeader(value = "X-Sharer-User-Id") int userId, @PathParam("text") String text) {
+            @RequestHeader(value = "X-Sharer-User-Id") Long userId, @PathParam("text") String text) {
         return ResponseEntity.ok(itemService.searchItemByText(text));
     }
 
@@ -69,8 +78,8 @@ public class ItemController {
     public ResponseEntity<?> updateItem(
             HttpServletRequest request,
             @Valid @RequestBody Item item,
-            @RequestHeader(value = "X-Sharer-User-Id") int userId,
-            @PathVariable @Positive int itemId,
+            @RequestHeader(value = "X-Sharer-User-Id") Long userId,
+            @PathVariable @Positive Long itemId,
             Errors errors
     ) {
         if (errors.hasErrors()) {
@@ -78,7 +87,24 @@ public class ItemController {
             return ResponseEntity.badRequest().body(ValidationErrorBuilder.fromBindingErrors(errors));
         }
         User itemOwner = itemService.getItem(itemId).getOwner();
-        if (itemOwner.getId() != userId) throw new ResponseStatusException(HttpStatus.FORBIDDEN, "No permissions");
+        if (!Objects.equals(itemOwner.getId(), userId)) throw new ResponseStatusException(HttpStatus.FORBIDDEN, "No permissions");
         return ResponseEntity.ok(itemService.updateItem(itemId, item));
+    }
+
+    @PostMapping("/{itemId}/comment")
+    @Validated(OnCreate.class)
+    public ResponseEntity<?> addComment(
+            HttpServletRequest request,
+            @Valid @RequestBody Comment comment,
+            @RequestHeader(value = "X-Sharer-User-Id") Long userId,
+            @PathVariable @Positive Long itemId,
+            Errors errors
+    ) {
+        if (errors.hasErrors()) {
+            log.info("Validation error with request: " + request.getRequestURI());
+            return ResponseEntity.badRequest().body(ValidationErrorBuilder.fromBindingErrors(errors));
+        }
+        return ResponseEntity.ok(commentService.addComment(userId, itemId, comment));
+
     }
 }
