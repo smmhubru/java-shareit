@@ -2,10 +2,12 @@ package ru.practicum.shareit.item;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.booking.Booking;
 import ru.practicum.shareit.booking.BookingRepository;
+import ru.practicum.shareit.validator.OffsetBasedPageRequest;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -59,8 +61,9 @@ public class PersistentItemStorage implements ItemStorage {
     }
 
     @Override
-    public List<ItemDto> getAllItems(Long userId) {
-        List<Item> result = itemRepository.findByOwnerId(userId);
+    public List<ItemDto> getAllItems(Long userId, int from, int size) {
+        Pageable pageable = new OffsetBasedPageRequest(from, size);
+        List<Item> result = itemRepository.findByOwnerId(userId, pageable);
         return result.stream().map(i -> {
             Optional<Booking> lastBooking = bookingRepository.findFirstByItemAndItemOwnerAndEndBeforeOrderByStartDesc(
                     i, i.getOwner(), LocalDateTime.now());
@@ -71,9 +74,10 @@ public class PersistentItemStorage implements ItemStorage {
     }
 
     @Override
-    public List<Item> searchItem(String text) {
+    public List<Item> searchItem(String text, int from, int size) {
         if (text.isBlank()) return new ArrayList<>();
-        List<Item> result = itemRepository.findByNameOrDescriptionContainingAllIgnoreCase(text, text);
+        Pageable pageable = new OffsetBasedPageRequest(from, size);
+        List<Item> result = itemRepository.findByNameOrDescriptionContainingAllIgnoreCase(text, text, pageable);
         return result.stream().filter(Item::getAvailable).collect(Collectors.toList());
     }
 }

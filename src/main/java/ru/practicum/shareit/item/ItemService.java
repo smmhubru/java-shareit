@@ -37,8 +37,8 @@ public class ItemService {
         );
     }
 
-    public List<ItemDto> getAllItems(Long userId) {
-        return itemStorage.getAllItems(userId);
+    public List<ItemDto> getAllItems(Long userId, int from, int size) {
+        return itemStorage.getAllItems(userId, from, size);
     }
 
     public Item updateItem(Long itemId, Item item) {
@@ -47,7 +47,7 @@ public class ItemService {
         );
     }
 
-    public List<Item> searchItemByText(String text) {
-        return itemStorage.searchItem(text);
+    public List<Item> searchItemByText(String text, int from, int size) {
+        return itemStorage.searchItem(text, from, size);
     }
 }
