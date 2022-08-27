@@ -21,9 +21,9 @@ public interface BookingStorage {
 
     Optional<Booking> approveBooking(Booking booking, boolean approved);
 
-    List<Booking> getBookingsByState(User user, BookingState state);
+    List<Booking> getBookingsByState(User user, BookingState state, int from, int size);
 
-    List<Booking> getBookingsByOwner(User user, BookingState state);
+    List<Booking> getBookingsByOwner(User user, BookingState state, int from, int size);
 
     Optional<Booking> getLastBookingByOwnerForItem(Item item);
 

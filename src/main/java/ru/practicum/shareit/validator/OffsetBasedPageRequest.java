@@ -4,8 +4,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 
 public class OffsetBasedPageRequest implements Pageable {
-    private long offset;
-    private int limit;
+    private final long offset;
+    private final int limit;
 
     public OffsetBasedPageRequest(long offset, int limit) {
         if (offset < 0) throw new IllegalArgumentException("Offset should be positive");

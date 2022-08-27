@@ -1,12 +1,14 @@
 package ru.practicum.shareit.booking;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.server.ResponseStatusException;
 import ru.practicum.shareit.item.*;
 import ru.practicum.shareit.user.User;
 import ru.practicum.shareit.user.UserStorage;
+import ru.practicum.shareit.validator.OffsetBasedPageRequest;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -76,49 +78,51 @@ public class PersistentBookingStorage implements BookingStorage {
     }
 
     @Override
-    public List<Booking> getBookingsByState(User user, BookingState state) {
+    public List<Booking> getBookingsByState(User user, BookingState state, int from, int size) {
+        Pageable pageable = new OffsetBasedPageRequest(from, size);
         if (state.equals(BookingState.ALL)) {
-            return bookingRepository.findAllByBookerOrderByStartDesc(user);
+            return bookingRepository.findAllByBookerOrderByStartDesc(user, pageable);
         }
         if (state.equals(BookingState.PAST)) {
-            return bookingRepository.findAllByBookerAndEndBeforeOrderByStartDesc(user, LocalDateTime.now());
+            return bookingRepository.findAllByBookerAndEndBeforeOrderByStartDesc(user, LocalDateTime.now(), pageable);
         }
         if (state.equals(BookingState.FUTURE)) {
-           return bookingRepository.findAllByBookerAndStartAfterOrderByStartDesc(user, LocalDateTime.now());
+           return bookingRepository.findAllByBookerAndStartAfterOrderByStartDesc(user, LocalDateTime.now(), pageable);
         }
         if (state.equals(BookingState.CURRENT)) {
             return bookingRepository.findAllByBookerAndStartBeforeAndEndAfterOrderByStartDesc(user, LocalDateTime.now(),
-                    LocalDateTime.now());
+                    LocalDateTime.now(), pageable);
         }
         if (state.equals(BookingState.WAITING)) {
-            return bookingRepository.findAllByBookerAndStatusOrderByStartDesc(user, BookingStatus.WAITING);
+            return bookingRepository.findAllByBookerAndStatusOrderByStartDesc(user, BookingStatus.WAITING, pageable);
         }
         if (state.equals(BookingState.REJECTED)) {
-            return bookingRepository.findAllByBookerAndStatusOrderByStartDesc(user, BookingStatus.REJECTED);
+            return bookingRepository.findAllByBookerAndStatusOrderByStartDesc(user, BookingStatus.REJECTED, pageable);
         }
         return new ArrayList<>();
     }
 
     @Override
-    public List<Booking> getBookingsByOwner(User user, BookingState state) {
+    public List<Booking> getBookingsByOwner(User user, BookingState state, int from, int size) {
+        Pageable pageable = new OffsetBasedPageRequest(from, size);
         if (state.equals(BookingState.ALL)) {
-            return bookingRepository.findAllByItemOwnerOrderByStartDesc(user);
+            return bookingRepository.findAllByItemOwnerOrderByStartDesc(user, pageable);
         }
         if (state.equals(BookingState.PAST)) {
-            return bookingRepository.findAllByItemOwnerAndEndBeforeOrderByStartDesc(user, LocalDateTime.now());
+            return bookingRepository.findAllByItemOwnerAndEndBeforeOrderByStartDesc(user, LocalDateTime.now(), pageable);
         }
         if (state.equals(BookingState.FUTURE)) {
-            return bookingRepository.findAllByItemOwnerAndStartAfterOrderByStartDesc(user, LocalDateTime.now());
+            return bookingRepository.findAllByItemOwnerAndStartAfterOrderByStartDesc(user, LocalDateTime.now(), pageable);
         }
         if (state.equals(BookingState.CURRENT)) {
             return bookingRepository.findAllByItemOwnerAndStartBeforeAndEndAfterOrderByStartDesc(user,
-                    LocalDateTime.now(), LocalDateTime.now());
+                    LocalDateTime.now(), LocalDateTime.now(), pageable);
         }
         if (state.equals(BookingState.WAITING)) {
-            return bookingRepository.findAllByItemOwnerAndStatusOrderByStartDesc(user, BookingStatus.WAITING);
+            return bookingRepository.findAllByItemOwnerAndStatusOrderByStartDesc(user, BookingStatus.WAITING, pageable);
         }
         if (state.equals(BookingState.REJECTED)) {
-            return bookingRepository.findAllByItemOwnerAndStatusOrderByStartDesc(user, BookingStatus.REJECTED);
+            return bookingRepository.findAllByItemOwnerAndStatusOrderByStartDesc(user, BookingStatus.REJECTED, pageable);
         }
         return null;
     }
