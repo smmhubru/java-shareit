@@ -35,15 +35,19 @@ public class Item {
     @ManyToOne
     @JoinColumn(name = "owner_id", nullable = false)
     private User owner;
-    @ManyToOne
-    @JoinColumn(name = "request_id")
+    @ManyToOne(targetEntity = ItemRequest.class, fetch = FetchType.EAGER)
+    @JoinColumn(name = "request_id", insertable = false, updatable = false)
+    @JsonIgnore
     private ItemRequest request;
+    @Column(name = "request_id")
+    private Long requestId;
     @OneToMany
     @JoinColumn(name = "item_id")
     @JsonIgnore
     private List<Comment> comments;
 
     public Item(Long id, String name, String description, Boolean available, User owner, ItemRequest request) {
+//    public Item(Long id, String name, String description, Boolean available, User owner) {
         this.id = id;
         this.name = name;
         this.description = description;
