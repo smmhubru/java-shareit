@@ -9,7 +9,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import ru.practicum.shareit.item.Item;
 import ru.practicum.shareit.item.ItemDto;
 import ru.practicum.shareit.item.ItemStorage;
-import ru.practicum.shareit.requests.ItemRequest;
 import ru.practicum.shareit.user.User;
 import ru.practicum.shareit.user.UserStorage;
 
