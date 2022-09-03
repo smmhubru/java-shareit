@@ -71,6 +71,7 @@ class BookingControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(booking.getId()));
     }
+
     @Test
     void getBookingById() throws Exception {
         Booking booking = new Booking();
