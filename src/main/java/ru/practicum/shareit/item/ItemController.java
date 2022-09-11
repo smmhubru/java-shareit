@@ -53,8 +53,11 @@ public class ItemController {
     }
 
     @GetMapping("")
-    public ResponseEntity<?> getAllItems(@RequestHeader(value = "X-Sharer-User-Id") Long userId) {
-        return ResponseEntity.ok(itemService.getAllItems(userId));
+    public ResponseEntity<?> getAllItems(
+            @RequestHeader(value = "X-Sharer-User-Id") Long userId,
+            @RequestParam(required = false, defaultValue = "0") int from,
+            @RequestParam(required = false, defaultValue = "10") int size) {
+        return ResponseEntity.ok(itemService.getAllItems(userId, from, size));
     }
 
     @GetMapping("/{itemId}")
@@ -70,8 +73,11 @@ public class ItemController {
 
     @GetMapping("/search")
     public ResponseEntity<?> searchItem(
-            @RequestHeader(value = "X-Sharer-User-Id") Long userId, @PathParam("text") String text) {
-        return ResponseEntity.ok(itemService.searchItemByText(text));
+            @RequestHeader(value = "X-Sharer-User-Id") Long userId,
+            @PathParam("text") String text,
+            @RequestParam(required = false, defaultValue = "0") int from,
+            @RequestParam(required = false, defaultValue = "10") int size) {
+        return ResponseEntity.ok(itemService.searchItemByText(text, from, size));
     }
 
     @PatchMapping("/{itemId}")

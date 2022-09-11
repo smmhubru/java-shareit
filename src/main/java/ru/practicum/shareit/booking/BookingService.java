@@ -76,17 +76,17 @@ public class BookingService {
         }
     }
 
-    public List<Booking> getBookingsByState(Long userId, BookingState state) {
+    public List<Booking> getBookingsByState(Long userId, BookingState state, int from, int size) {
         User user = userStorage.getUser(userId).orElseThrow(
                 () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Unable to find user")
         );
-        return bookingStorage.getBookingsByState(user, state);
+        return bookingStorage.getBookingsByState(user, state, from, size);
     }
 
-    public List<Booking> getBookingsByOwner(Long userId, BookingState state) {
+    public List<Booking> getBookingsByOwner(Long userId, BookingState state, int from, int size) {
         User user = userStorage.getUser(userId).orElseThrow(
                 () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Unable to find user")
         );
-        return bookingStorage.getBookingsByOwner(user, state);
+        return bookingStorage.getBookingsByOwner(user, state, from, size);
     }
 }
