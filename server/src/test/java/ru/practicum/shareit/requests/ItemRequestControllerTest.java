@@ -31,7 +31,7 @@ class ItemRequestControllerTest {
     @MockBean
     ItemRequestService itemRequestService;
 
-    ObjectMapper mapper = JsonMapper.builder()
+    final ObjectMapper mapper = JsonMapper.builder()
             .addModule(new ParameterNamesModule())
             .addModule(new Jdk8Module())
             .addModule(new JavaTimeModule())

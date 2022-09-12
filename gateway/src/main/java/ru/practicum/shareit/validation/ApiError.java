@@ -9,9 +9,9 @@ import java.util.List;
 @Getter
 public class ApiError {
 
-    private HttpStatus status;
-    private String error;
-    private List<String> errors;
+    private final HttpStatus status;
+    private final String error;
+    private final List<String> errors;
 
     public ApiError(HttpStatus status, String error, List<String> errors) {
         super();

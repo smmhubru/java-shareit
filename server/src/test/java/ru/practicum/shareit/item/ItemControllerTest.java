@@ -38,7 +38,7 @@ class ItemControllerTest {
     @MockBean
     CommentService commentService;
 
-    ObjectMapper mapper = JsonMapper.builder()
+    final ObjectMapper mapper = JsonMapper.builder()
             .addModule(new ParameterNamesModule())
             .addModule(new Jdk8Module())
             .addModule(new JavaTimeModule())

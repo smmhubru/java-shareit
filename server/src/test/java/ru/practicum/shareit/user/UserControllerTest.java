@@ -30,7 +30,7 @@ class UserControllerTest {
     @MockBean
     UserService userService;
 
-    ObjectMapper mapper = JsonMapper.builder()
+    final ObjectMapper mapper = JsonMapper.builder()
             .addModule(new ParameterNamesModule())
             .addModule(new Jdk8Module())
             .addModule(new JavaTimeModule())
