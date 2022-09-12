@@ -3,13 +3,10 @@ package ru.practicum.shareit.booking;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
-import ru.practicum.shareit.booking.dto.BookItemRequestDto;
 import ru.practicum.shareit.booking.dto.BookingCreationDto;
 import ru.practicum.shareit.booking.dto.BookingState;
 
@@ -73,8 +70,4 @@ public class BookingController {
         log.info("Get bookings by owner userId={}, state={}, from={}, size={}", userId, stateParam, from, size);
         return bookingClient.getBookingsByOwner(userId, state, from, size);
     }
-
-
-
-
 }
