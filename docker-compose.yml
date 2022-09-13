@@ -17,7 +17,7 @@ services:
     environment:
       - SHAREIT_SERVER_URL=http://server:9090
     volumes:
-      - "/etc/localtime:/etc/localtime:ro"
+      - '/etc/localtime:/etc/localtime:ro'
 
   server:
     build:
@@ -33,7 +33,7 @@ services:
     environment:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/shareit
     volumes:
-      - "/etc/localtime:/etc/localtime:ro"
+      - '/etc/localtime:/etc/localtime:ro'
 
   db:
     image: 'postgres:13.7'
@@ -41,8 +41,8 @@ services:
     restart: always
     volumes:
       - postgres_data:/var/lib/postgresql/data
-    ports:
-      - 5432:5432
+    expose:
+      - 5432
     healthcheck:
       test: ['CMD-SHELL', 'su postgres', '&&', 'pg_isready']
       interval: 5s
