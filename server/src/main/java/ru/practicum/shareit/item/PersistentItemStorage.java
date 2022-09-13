@@ -63,7 +63,7 @@ public class PersistentItemStorage implements ItemStorage {
     @Override
     public List<ItemDto> getAllItems(Long userId, int from, int size) {
         Pageable pageable = new OffsetBasedPageRequest(from, size);
-        List<Item> result = itemRepository.findByOwnerId(userId, pageable);
+        List<Item> result = itemRepository.findByOwnerIdOrderById(userId, pageable);
         return result.stream().map(i -> {
             Optional<Booking> lastBooking = bookingRepository.findFirstByItemAndItemOwnerAndEndBeforeOrderByStartDesc(
                     i, i.getOwner(), LocalDateTime.now());
