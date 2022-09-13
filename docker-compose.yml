@@ -1,25 +1,30 @@
 version: '3.9'
+
+volumes:
+  postgres_data:
+
 services:
   gateway:
     build:
-      context: .
-      dockerfile: gateway/Dockerfile
+      context: gateway
+      dockerfile: Dockerfile
     container_name: gateway
     ports:
-      - "8080:8080"
+      - '8080:8080'
     depends_on:
       db:
         condition: service_healthy
     environment:
       - SHAREIT_SERVER_URL=http://server:9090
+
   server:
     build:
-      context: .
-      dockerfile: server/Dockerfile
+      context: server
+      dockerfile: Dockerfile
     restart: always
     container_name: server
-    ports:
-      - "9090:9090"
+    expose:
+      - 9090
     depends_on:
       db:
         condition: service_healthy
@@ -28,7 +33,7 @@ services:
 
   db:
     image: 'postgres:13.7'
-    container_name: server_db
+    container_name: db
     restart: always
     volumes:
       - postgres_data:/var/lib/postgresql/data
@@ -39,3 +44,6 @@ services:
       interval: 5s
       timeout: 5s
       retries: 10
+    environment:
+      POSTGRES_DB: shareit
+      POSTGRES_PASSWORD: password

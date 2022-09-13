@@ -52,6 +52,7 @@ public class PersistentItemStorage implements ItemStorage {
         Optional<Item> item = itemRepository.findById(itemId);
         if (item.isEmpty()) return Optional.empty();
         Optional<Booking> lastBooking = bookingRepository.findFirstByItemAndItemOwnerAndEndBeforeOrderByStartDesc(
+//        Optional<Booking> lastBooking = bookingRepository.findFirstByItemAndItemOwnerAndStartBeforeOrderByStartDesc(
                 item.get(), item.get().getOwner(), LocalDateTime.now());
         Optional<Booking> nextBooking = bookingRepository.findFirstByItemAndItemOwnerAndStartAfterOrderByStartDesc(
                 item.get(), item.get().getOwner(), LocalDateTime.now()
