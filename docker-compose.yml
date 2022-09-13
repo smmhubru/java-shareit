@@ -16,6 +16,8 @@ services:
         condition: service_healthy
     environment:
       - SHAREIT_SERVER_URL=http://server:9090
+    volumes:
+      - "/etc/localtime:/etc/localtime:ro"
 
   server:
     build:
@@ -30,6 +32,8 @@ services:
         condition: service_healthy
     environment:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/shareit
+    volumes:
+      - "/etc/localtime:/etc/localtime:ro"
 
   db:
     image: 'postgres:13.7'
