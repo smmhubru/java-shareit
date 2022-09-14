@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import ru.practicum.shareit.user.User;
 import ru.practicum.shareit.user.UserService;
-import ru.practicum.shareit.validator.OnCreate;
 import ru.practicum.shareit.validator.ValidationErrorBuilder;
 
 import javax.servlet.http.HttpServletRequest;
@@ -34,7 +33,6 @@ public class ItemController {
     }
 
     @PostMapping("")
-    @Validated(OnCreate.class)
     public ResponseEntity<?> createItem(
             HttpServletRequest request,
             @RequestBody Item item,
@@ -96,7 +94,6 @@ public class ItemController {
     }
 
     @PostMapping("/{itemId}/comment")
-    @Validated(OnCreate.class)
     public ResponseEntity<?> addComment(
             HttpServletRequest request,
             @RequestBody Comment comment,

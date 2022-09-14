@@ -5,7 +5,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import ru.practicum.shareit.requests.ItemRequest;
 import ru.practicum.shareit.user.User;
-import ru.practicum.shareit.validator.OnCreate;
 
 import javax.persistence.*;
 import java.util.List;

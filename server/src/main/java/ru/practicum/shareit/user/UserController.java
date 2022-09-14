@@ -6,7 +6,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.Errors;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import ru.practicum.shareit.validator.OnCreate;
 import ru.practicum.shareit.validator.ValidationErrorBuilder;
 
 import javax.servlet.http.HttpServletRequest;
@@ -29,7 +28,6 @@ public class UserController {
     }
 
     @PostMapping("")
-    @Validated(OnCreate.class)
     public ResponseEntity<?> createUser(HttpServletRequest request, @RequestBody User user, Errors errors) {
         if (errors.hasErrors()) {
             log.info("Validation error with request: " + request.getRequestURI());
