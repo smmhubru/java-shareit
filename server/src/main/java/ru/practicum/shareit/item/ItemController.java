@@ -14,8 +14,6 @@ import ru.practicum.shareit.validator.OnCreate;
 import ru.practicum.shareit.validator.ValidationErrorBuilder;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
-import javax.validation.constraints.Positive;
 import javax.websocket.server.PathParam;
 import java.util.Objects;
 
@@ -39,7 +37,7 @@ public class ItemController {
     @Validated(OnCreate.class)
     public ResponseEntity<?> createItem(
             HttpServletRequest request,
-            @Valid @RequestBody Item item,
+            @RequestBody Item item,
             @RequestHeader(value = "X-Sharer-User-Id") Long userId,
             Errors errors
     ) {
@@ -62,7 +60,7 @@ public class ItemController {
 
     @GetMapping("/{itemId}")
     public ResponseEntity<?> getItem(@RequestHeader(value = "X-Sharer-User-Id") Long userId,
-                                     @PathVariable @Positive Long itemId) {
+                                     @PathVariable Long itemId) {
         ItemDto result = itemService.getItem(itemId);
         if (!Objects.equals(result.getOwner().getId(), userId)) {
             result.setLastBooking(null);
@@ -83,9 +81,9 @@ public class ItemController {
     @PatchMapping("/{itemId}")
     public ResponseEntity<?> updateItem(
             HttpServletRequest request,
-            @Valid @RequestBody Item item,
+            @RequestBody Item item,
             @RequestHeader(value = "X-Sharer-User-Id") Long userId,
-            @PathVariable @Positive Long itemId,
+            @PathVariable Long itemId,
             Errors errors
     ) {
         if (errors.hasErrors()) {
@@ -101,9 +99,9 @@ public class ItemController {
     @Validated(OnCreate.class)
     public ResponseEntity<?> addComment(
             HttpServletRequest request,
-            @Valid @RequestBody Comment comment,
+            @RequestBody Comment comment,
             @RequestHeader(value = "X-Sharer-User-Id") Long userId,
-            @PathVariable @Positive Long itemId,
+            @PathVariable Long itemId,
             Errors errors
     ) {
         if (errors.hasErrors()) {

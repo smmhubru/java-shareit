@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.validator.ValidationErrorBuilder;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
 
 @RestController
 @Slf4j
@@ -26,7 +25,7 @@ public class BookingController {
     @PostMapping("")
     public ResponseEntity<?> createBooking(HttpServletRequest request,
                                            @RequestHeader(value = "X-Sharer-User-Id") Long userId,
-                                           @Valid @RequestBody BookingCreationDto booking,
+                                           @RequestBody BookingCreationDto booking,
                                            Errors errors) {
         if (errors.hasErrors()) {
             log.info("Validation error with request: " + request.getRequestURI());

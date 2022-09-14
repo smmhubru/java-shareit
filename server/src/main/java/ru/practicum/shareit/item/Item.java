@@ -8,8 +8,6 @@ import ru.practicum.shareit.user.User;
 import ru.practicum.shareit.validator.OnCreate;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @Entity
@@ -21,15 +19,10 @@ public class Item {
     @Column(name = "item_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @NotBlank(message = "Name can't be blank", groups = OnCreate.class)
-    @NotNull(message = "Name can't be null", groups = OnCreate.class)
     @Column
     private String name;
-    @NotBlank(message = "Description can't be null", groups = OnCreate.class)
-    @NotNull(message = "Description can't be null", groups = OnCreate.class)
     @Column
     private String description;
-    @NotNull(message = "Available can't be null", groups = OnCreate.class)
     @Column
     private Boolean available;
     @ManyToOne

@@ -10,8 +10,6 @@ import ru.practicum.shareit.validator.OnCreate;
 import ru.practicum.shareit.validator.ValidationErrorBuilder;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
-import javax.validation.constraints.Positive;
 
 @RestController
 @Slf4j
@@ -32,7 +30,7 @@ public class UserController {
 
     @PostMapping("")
     @Validated(OnCreate.class)
-    public ResponseEntity<?> createUser(HttpServletRequest request, @Valid @RequestBody User user, Errors errors) {
+    public ResponseEntity<?> createUser(HttpServletRequest request, @RequestBody User user, Errors errors) {
         if (errors.hasErrors()) {
             log.info("Validation error with request: " + request.getRequestURI());
             return ResponseEntity.badRequest().body(ValidationErrorBuilder.fromBindingErrors(errors));
@@ -43,7 +41,7 @@ public class UserController {
     @PatchMapping("/{userId}")
     public ResponseEntity<?> updateUser(
             HttpServletRequest request,
-            @Valid @RequestBody User user, @PathVariable @Positive Long userId, Errors errors) {
+            @RequestBody User user, @PathVariable Long userId, Errors errors) {
         if (errors.hasErrors()) {
             log.info("Validation error with request: " + request.getRequestURI());
             return ResponseEntity.badRequest().body(ValidationErrorBuilder.fromBindingErrors(errors));
@@ -52,12 +50,12 @@ public class UserController {
     }
 
     @GetMapping("/{userId}")
-    public ResponseEntity<?> getUserById(@PathVariable @Positive Long userId) {
+    public ResponseEntity<?> getUserById(@PathVariable Long userId) {
         return ResponseEntity.ok(userService.getUser(userId));
     }
 
     @DeleteMapping("/{userId}")
-    public ResponseEntity<?> deleteUserById(@PathVariable @Positive Long userId) {
+    public ResponseEntity<?> deleteUserById(@PathVariable Long userId) {
         return ResponseEntity.ok(userService.removeUser(userId));
     }
 }

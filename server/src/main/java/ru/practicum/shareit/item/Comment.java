@@ -6,8 +6,6 @@ import ru.practicum.shareit.user.User;
 import ru.practicum.shareit.validator.OnCreate;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
 @Entity
@@ -18,8 +16,6 @@ public class Comment {
     @Column(name = "comment_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @NotBlank(message = "Text can't be blank", groups = OnCreate.class)
-    @NotNull(message = "Text can't be null", groups = OnCreate.class)
     @Column
     private String text;
     @ManyToOne

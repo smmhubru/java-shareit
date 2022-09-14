@@ -9,8 +9,6 @@ import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.validator.ValidationErrorBuilder;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
-import javax.validation.constraints.Positive;
 
 @RestController
 @Slf4j
@@ -27,7 +25,7 @@ public class ItemRequestController {
     @PostMapping("")
     public ResponseEntity<?> createItemRequest(
             HttpServletRequest request,
-            @Valid @RequestBody ItemRequest itemRequest,
+            @RequestBody ItemRequest itemRequest,
             @RequestHeader(value = "X-Sharer-User-Id") Long userId,
             Errors errors) {
         if (errors.hasErrors()) {
@@ -45,7 +43,7 @@ public class ItemRequestController {
     @GetMapping("/{requestId}")
     public ResponseEntity<?> getItemRequestById(
             @RequestHeader(value = "X-Sharer-User-Id") Long userId,
-            @PathVariable @Positive Long requestId) {
+            @PathVariable Long requestId) {
         return ResponseEntity.ok(itemRequestService.getItemRequestById(userId, requestId));
     }
 

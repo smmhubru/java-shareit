@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
-import javax.validation.ConstraintViolationException;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -21,22 +20,6 @@ import java.util.Map;
  */
 @ControllerAdvice("ru.practicum.shareit")
 public class ValidationErrorHandler {
-    @ExceptionHandler(ConstraintViolationException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ResponseBody
-    public ValidationError onConstraintValidationException(
-            ConstraintViolationException ex) {
-        ValidationError error = new ValidationError(
-                "Validation failure: " + ex.getConstraintViolations().size() + " errors.");
-
-        ex.getConstraintViolations().forEach((violation) -> {
-            String fieldName = violation.getPropertyPath().toString();
-            String errorMessage = violation.getMessage();
-            error.addValidationError(fieldName + " " + errorMessage);
-        });
-        return error;
-    }
-
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ResponseBody
